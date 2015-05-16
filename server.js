@@ -48,3 +48,7 @@ app.get('/ipfs/file/providers', function(req, res) {
 
 });
 
+app.get('/ipfs/file/size', function(req, res) {
+    res.send(ipfsclient.getFileSize(req.body.arg));
+});
+

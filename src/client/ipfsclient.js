@@ -1,6 +1,6 @@
 import ipfsapi from "ipfs-api";
 
-var logging = true;
+var logging = false;
 
 class IPFSClient {
 
@@ -26,16 +26,19 @@ class IPFSClient {
         });
     }
 
-    getFileSize(hash) {
-        this.ipfs.ls(hash, function(err,res) {
+    addFile(filePath) {
+        this.ipfs.add(filePath, function(err, res) {
             if(err || !res) {
                 return console.error(err);
             }
 
-            if(logging)
-                console.log(res)
-
-            return res;
+            res.forEach(function(file) {
+                if(logging) {
+                    console.log("File " + file.Name + " published on IPFS");
+                    console.log("Hash: " + file.Hash);
+                }
+                return file.Hash;
+            });
         });
     }
 
@@ -57,19 +60,25 @@ class IPFSClient {
         });
     }
 
-    addFile(filePath) {
-        this.ipfs.add(filePath, function(err, res) {
+
+    getFileSize(hash) {
+        this.ipfs.ls(hash, function(err,res) {
             if(err || !res) {
                 return console.error(err);
             }
 
-            res.forEach(function(file) {
-                if(logging) {
-                    console.log("File " + file.Name + " published on IPFS");
-                    console.log("Hash: " + file.Hash);
-                }
-                return file.Hash;
+            let totalSize = 0;
+
+            res.Objects.forEach(function(file) {
+                file.Links.forEach(function(link) {
+                    totalSize += link.Size;
+                });
             });
+
+            if(logging)
+                console.log("File " + hash + " has size " + totalSize);
+
+            return totalSize;
         });
     }
 
