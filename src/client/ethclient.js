@@ -80,75 +80,49 @@ class EthClient {
         });
     }
 
-    registerWorker(maxLength, price, name) {
-        this.contract.registerWorker(maxLength, price, name);
-        this.isWorker = true;
+    setContract(contractAddress) {
+        this.contract = new DStream(contractAddress);
     }
 
-    changeWorkerPrice(newPrice) {
-        this.contract.changeWorkerPrice(newPrice);
+    confirmStreamedData(dataSize) {
+        contract.confirm(dataSize);
     }
 
-    buyContract(worker, redundancy, price, length) {
-        let options = {
-            value: length * price,
-            gas: 500000
-        };
-        this.contract.sendTransaction(options).buyContract(worker, redundancy,
-                                                           length);
-
-        let filter = web3.eth.filter('chain');
-        filter.watch(function() {
-                let workAgreement = this.contract.workersInfo(worker)[3];
-                console.log(workAgreement);
-                filter.stopWatching();
-            }.bind(this));
+    redeemPayout() {
+        contract.redeem();
     }
 
-    bigNumberToInt(bigNumber) {
-        return bigNumber.c[0];
+    unregisterChain() {
+        web3.eth.filter('chain').stopWatching();
     }
 
-    isWorker() {
-        let numWorkers = this.bigNumberToInt(this.contract.numWorkers());
-        for (let i = 0; i < numWorkers; i++) {
-            if (web3.eth.coinbase === this.contract.workerList(i)) {
-                return true;
-            }
-        }
-        return false;
+    unregisterPending() {
+        web3.eth.filter('pending').stopWatching();
     }
 
-    findWorkers(length, price, success) {
-        let numWorkers = this.bigNumberToInt(this.contract.numWorkers());
-        let workers = [];
-        for (let i = 0; i < numWorkers; i++) {
-            let address = this.contract.workerList(i);
-            let info = this.contract.workersInfo(address);
-            let workerLength = this.bigNumberToInt(info[1]);
-            let workerPrice = this.bigNumberToInt(info[2]);
-            if (length <= workerLength && price >= workerPrice) {
-                workers[workers.length] = {
-                    pubkey: address,
-                    name: info[0],
-                    length: workerLength,
-                    price: workerPrice
-                };
-            }
-        }
+    unregisterAll() {
+        this.unregisterPending();
+        this.unregisterChain();
+    }
 
-        success(workers);
+    confirmStreamedData(dataSize) {
+        contract.confirm(dataSize);
+    }
+
+    redeemPayout() {
+        contract.redeem();
     }
 
     registerListener(callback) {
-	listeners.push(callback);
+        listeners.push(callback);
     }
 
     unregisterListener(callback) {
-	listeners = listeners.filter((a) => a != callback);
+        listeners = listeners.filter((a) => a != callback);
     }
 }
 
 let ethclient = new EthClient();
+window.ethclient = ethclient;
 
 export default ethclient;
