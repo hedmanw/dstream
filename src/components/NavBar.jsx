@@ -31,8 +31,8 @@ let NavBar = React.createClass({
                 </div>
                 <div id="navbar" className="navbar-collapse collapse">
                     <ul className="nav navbar-nav">
-                        <NavTab to="dashboard">Dashboard</NavTab>
-                        <NavTab to="party">Party!</NavTab>
+                        <NavTab to="dashboard">Watch stuff!</NavTab>
+                        <NavTab to="party">Seed things!</NavTab>
                     </ul>
                     <ul className="nav navbar-nav navbar-right">
                         <li><Link to="app">{this.state.coinbase}</Link></li>

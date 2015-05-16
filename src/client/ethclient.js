@@ -30,51 +30,6 @@ class EthClient {
         return (unit !== 'wei' ? web3.fromWei(wei, unit) : wei) + ' ' + unit;
     }
 
-    getChain(success) {
-        var createContent = function() {
-            return {
-                items: [
-                    {label: "Coinbase", value: web3.eth.coinbase},
-                    {label: "Accounts", value: web3.eth.accounts},
-                    {
-                        label: "Balance",
-                        value: this.formatBalance(web3.eth.getBalance(web3.eth.coinbase))
-                    }
-                ]
-            }
-        }.bind(this);
-
-        success(createContent());
-        this.chainFilter.watch(function() {
-            success(createContent());
-        });
-    }
-
-    getPending(success) {
-        let contract = this.contract;
-        function createContent() {
-            let latestBlock = web3.eth.blockNumber;
-            return {
-                items: [
-                    {label: "Latest block", value: latestBlock},
-                    {
-                        label: "Latest block hash",
-                        value: web3.eth.getBlock(latestBlock).hash
-                    },
-                    {
-                        label: "Latest block timestamp",
-                        value: Date(web3.eth.getBlock(latestBlock).timestamp)
-                    },
-                    {label: "Contract address", value: ContractAddress},
-                ]
-            }
-        }
-        success(createContent());
-        web3.eth.filter('pending').watch(function() {
-            success(createContent());
-        });
-    }
-
     setContract(contractAddress) {
         this.contract = new DStream(contractAddress);
     }

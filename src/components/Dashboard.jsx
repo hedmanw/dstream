@@ -1,5 +1,5 @@
 import React from "react";
-import InfoBox from "./Infobox.jsx";
+import MovieBox from "./MovieBox.jsx";
 import EthClient from "../client/ethclient.js";
 
 let Dashboard = React.createClass({
@@ -12,8 +12,7 @@ let Dashboard = React.createClass({
                 <p className="lead">pls seed torrentz.</p>
                 <div className="row">
                     <div className="col-md-12">
-                        <InfoBox updateLoop={EthClient.getChain.bind(EthClient)} unregister={EthClient.unregisterChain}/>
-                        <InfoBox updateLoop={EthClient.getPending.bind(EthClient)} unregister={EthClient.unregisterPending}/>
+                        <MovieBox/>
                         <hr />
                     </div>
                 </div>
