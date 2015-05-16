@@ -1,0 +1,8 @@
+*.swp
+*.swo
+*.pyc
+
+babel.json
+
+build/app.js
+node_modules/
