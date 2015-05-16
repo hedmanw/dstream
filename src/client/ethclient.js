@@ -46,10 +46,11 @@ class EthClient {
         return (unit !== 'wei' ? web3.fromWei(wei, unit) : wei) + ' ' + unit;
     }
 
-    deployContract(dataHash) {
+    deployContract(dataHash, filesize) {
+        this.filesize = filesize;
         let address = web3.eth.sendTransaction({code: ContractAbi})
         this.setContract(address);
-        this.contract.setData(dataHash, {value: 100})
+        this.contract.setData(dataHash, {value: filesize*10e15})
     }
 
     setContract(contractAddress, callback) {
@@ -57,7 +58,9 @@ class EthClient {
         window.contract = this.contract;
     }
 
-    confirmStreamedData(address, amount) {
+    confirmStreamedData(address, dataSize) {
+        let amount = contract.depositTotal().toNumber() * (dataSize/this.filesize)
+        console.log(amount);
         contract.confirm(address, amount);
     }
 
@@ -71,14 +74,6 @@ class EthClient {
 
     unregisterAll() {
         this.unregisterChain();
-    }
-
-    confirmStreamedData(dataSize) {
-        contract.confirm(dataSize);
-    }
-
-    redeemPayout() {
-        contract.redeem();
     }
 
     registerListener(callback) {
