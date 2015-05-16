@@ -2,6 +2,10 @@ import ContractAddress from "../fixtures/contractAddress.js";
 import ContractAbi from "../fixtures/contractAbi.js";
 import ContractStructure from "../fixtures/contractStructure.js";
 import web3 from "web3";
+import PubSub from "pubsub-js";
+import Q from "q";
+
+web3.eth.getBalancePromise = Q.denodeify(web3.eth.getBalance);
 
 var listeners = [];
 
@@ -10,6 +14,10 @@ class EthClient {
         try {
             web3.setProvider(new web3.providers.HttpProvider("http://localhost:8545"))
             this.chainFilter = web3.eth.filter('latest');
+
+            this.chainFilter.watch(() => {
+                PubSub.publish('chain');
+            })
         }
         catch(e) {
             console.error("Could not contact Ethereum on localhost:8545 due to: %O", e);
@@ -17,8 +25,13 @@ class EthClient {
         this.DStream = web3.eth.contract(ContractStructure.DStream);
         window.DStream = this.DStream;
     }
+
     getCoinbase(success) {
         success(web3.eth.coinbase);
+    }
+
+    getCash() {
+        web3.eth.getBalancePromise(web3.eth.coinbase);
     }
 
     formatBalance(wei) {
@@ -74,6 +87,14 @@ class EthClient {
 
     unregisterListener(callback) {
         listeners = listeners.filter((a) => a != callback);
+    }
+
+    subscribe(callback) {
+        return PubSub.subscribe('chain', callback);
+    }
+
+    unsubscribe(token) {
+        PubSub.unsubscribe(token);
     }
 }
 
