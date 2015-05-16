@@ -27,74 +27,77 @@ class IPFSClient {
     }
 
     addFile(filePath) {
+        var hash;
+        
         this.ipfs.add(filePath, function(err, res) {
             if(err || !res) {
                 return console.error(err);
             }
 
-            res.forEach(function(file) {
-                if(logging) {
-                    console.log("File " + file.Name + " published on IPFS");
-                    console.log("Hash: " + file.Hash);
-                }
-                return file.Hash;
-            });
+            let ipfsFile = res[0];
+            console.log('File ' + ipfsFile.Name + " published on IPFS");
+            console.log('Hash: ' + ipfsFile.Hash);
+
+            hash = ipfsFile.Hash;
         });
+
+        console.log(hash);
+        return hash;
     }
 
-    getFile(hash) {
-        this.ipfs.cat(hash, function(err,file) {
-            if(err || !file) {
-                return console.error(err);
-            }
+getFile(hash) {
+    this.ipfs.cat(hash, function(err,file) {
+        if(err || !file) {
+            return console.error(err);
+        }
 
-            if(logging)
-                if(file.readable) {
+        if(logging)
+            if(file.readable) {
                     // Returned as a stream
                     file.pipe(process.stdout);
                 } else {
                     // Returned as a string
                     console.log(file);
                 }
-            return file;
-        });
-    }
-
-
-    getFileSize(hash) {
-        this.ipfs.ls(hash, function(err,res) {
-            if(err || !res) {
-                return console.error(err);
-            }
-
-            let totalSize = 0;
-
-            res.Objects.forEach(function(file) {
-                file.Links.forEach(function(link) {
-                    totalSize += link.Size;
-                });
+                return file;
             });
+}
 
-            if(logging)
-                console.log("File " + hash + " has size " + totalSize);
 
-            return totalSize;
+getFileSize(hash) {
+    this.ipfs.ls(hash, function(err,res) {
+        if(err || !res) {
+            return console.error(err);
+        }
+
+        let totalSize = 0;
+
+        res.Objects.forEach(function(file) {
+            file.Links.forEach(function(link) {
+                totalSize += link.Size;
+            });
         });
-    }
 
-    getProviders(fileHash) {
-        this.ipfs.dht.findprovs(fileHash, function(err, res) {
-            if(err || !res) {
-                return console.error(err);
-            }
+        if(logging)
+            console.log("File " + hash + " has size " + totalSize);
 
-            if(logging) {
-                console.log("Providers of " + fileHash + ":");
-                console.log(res);
-            }
-            return res;
-        });
-    }
+        return totalSize;
+    });
+}
+
+getProviders(fileHash) {
+    this.ipfs.dht.findprovs(fileHash, function(err, res) {
+        if(err || !res) {
+            return console.error(err);
+        }
+
+        if(logging) {
+            console.log("Providers of " + fileHash + ":");
+            console.log(res);
+        }
+        return res;
+    });
+}
 /*
     disconnect(peerID) {
         ipfs.id(peerID, function(err,res) {
@@ -102,7 +105,7 @@ class IPFSClient {
                 return console.error(err);
             }
         });
-    }*/
+}*/
 }
 
 let ipfsclient = new IPFSClient();

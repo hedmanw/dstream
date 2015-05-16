@@ -43,8 +43,8 @@ let SeedForm = React.createClass({
     },
 
     handleSubmit: function(e) {
+        console.log('HEJ:',e);
         e.preventDefault();
-        console.log(e);
         this.handleSeedSubmit(); 
 /*
         var cmd = React.findDOMNode(this.refs.cmd);
@@ -60,9 +60,8 @@ let SeedForm = React.createClass({
         return;*/
     },
 
-    handleSeedSubmit: function() {
+    handleSeedSubmit: function(filepath) {
         $.post('/ipfs/file', {
-          cmd: 'addFile',
           arg: '/file.txt'
         }, (data) => {
             console.log(data);
