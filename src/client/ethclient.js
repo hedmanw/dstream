@@ -33,10 +33,10 @@ class EthClient {
         return (unit !== 'wei' ? web3.fromWei(wei, unit) : wei) + ' ' + unit;
     }
 
-    deployContract(dataSize) {
+    deployContract(dataHash) {
         let address = web3.eth.sendTransaction({code: ContractAbi})
         this.setContract(address);
-        this.contract.setData(dataSize, {value: 100})
+        this.contract.setData(dataHash, {value: 100})
     }
 
     setContract(contractAddress, callback) {
@@ -44,8 +44,8 @@ class EthClient {
         window.contract = this.contract;
     }
 
-    confirmStreamedData(address, dataSize) {
-        contract.confirm(address, dataSize);
+    confirmStreamedData(address, amount) {
+        contract.confirm(address, amount);
     }
 
     redeemPayout() {

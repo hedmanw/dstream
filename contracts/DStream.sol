@@ -3,21 +3,20 @@ contract DStream {
     address public owner;
     mapping (address => uint) public redeemable;
     uint public depositTotal;
-    uint public depositLeft;
-    uint public filesize;
+    bytes32 public filehash;
 
     function DStream() {
         owner = msg.sender;
     }
 
-    function setData(uint size) {
+    function setData(bytes32 hash) {
         depositTotal = msg.value;
-        filesize = size;
+        filehash = hash;
     }
 
-    function confirm(address provider, uint dataAmount) {
-        if (owner == msg.sender) {
-            redeemable[provider] += depositTotal*(dataAmount/filesize);
+    function confirm(address provider, uint amount) {
+        if (msg.sender == owner) {
+            redeemable[provider] = amount;
         }
     }
 
