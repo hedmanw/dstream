@@ -1,7 +1,7 @@
 {
-  "name": "Zeppelin",
+  "name": "dstream",
   "version": "0.0.1",
-  "description": "A decentralized marketplace for computing power",
+  "description": "A decentralized file streaming service",
   "main": "src/main.jsx",
   "scripts": {
     "watch": "npm run watch-js & npm start",
@@ -15,25 +15,27 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/dccp/zeppelin"
+    "url": "https://github.com/hedmanw/dstream"
   },
   "keywords": [
-    "zeppelin",
-    "ethereum"
+    "ipfs",
+    "ethereum",
+    "star wars",
+    "korv",
+    "p2p"
   ],
-  "author": "Name Name",
+  "author": "Doktor Träd",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/dccp/zeppelin/issues"
+    "url": "https://github.com/hedmanw/dstream/issues"
   },
-  "homepage": "https://github.com/dccp",
+  "homepage": "https://github.com/hedmanw/dstream",
   "devDependencies": {
     "babel": "^4.7.16",
     "babelify": "^5.0.4",
     "body-parser": "^1.12.2",
     "browserify": "^9.0.3",
     "coveralls": "^2.11.2",
-    "docker-transform": "dccp/docker-transfer#dev",
     "expect.js": "^0.3.1",
     "express": "^4.12.2",
     "mochify": "^2.6.0",
