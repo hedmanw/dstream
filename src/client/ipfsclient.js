@@ -1,6 +1,6 @@
 import ipfsapi from "ipfs-api";
 
-var logging = false;
+var logging = true;
 
 class IPFSClient {
 
@@ -23,6 +23,19 @@ class IPFSClient {
                 console.log("Peer " + seeder + " has seeded " + seederStats.TotalIn);
 
             return seederStats.TotalIn;
+        });
+    }
+
+    getFileSize(hash) {
+        this.ipfs.ls(hash, function(err,res) {
+            if(err || !res) {
+                return console.error(err);
+            }
+
+            if(logging)
+                console.log(res)
+
+            return res;
         });
     }
 
