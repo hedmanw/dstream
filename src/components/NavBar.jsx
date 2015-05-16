@@ -9,7 +9,6 @@ let NavBar = React.createClass({
     getInitialState() {
         return {
             coinbase: "Waiting for AZ",
-            json_rpc_url: EthClient.getJsonRPCUrl()
         }
     },
     componentDidMount() {

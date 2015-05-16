@@ -11,17 +11,7 @@ var listeners = [];
 class EthClient {
     constructor() {
         try {
-            let url = null;
-            if (window.localStorage && window.localStorage.getItem('rpc_url')) {
-                url = window.localStorage.getItem('rpc_url');
-            }
-            this.setJsonRPCUrl(url || 'http://localhost:8080');
-
-            var m = web3.eth.getStorageAt(ContractAddress, "0x1");
-            let WorkerDispatcher = web3.eth.contract(ContractStructure.WorkerDispatcher);
-            this.contract = new WorkerDispatcher(ContractAddress);
-            this.identity = web3.shh.newIdentity();
-            this.isWorker = isWorker();
+            web3.setProvider(new web3.providers.HttpProvider("http://localhost:8545"))
         }
         catch(e) {
             console.log("Could not contact " + this.getJsonRPCUrl());
@@ -58,7 +48,7 @@ class EthClient {
         }.bind(this);
 
         success(createContent());
-        web3.eth.filter('chain').watch(function() {
+        web3.eth.filter('latest').watch(function() {
             success(createContent());
         });
     }
@@ -88,19 +78,6 @@ class EthClient {
         web3.eth.filter('pending').watch(function() {
             success(createContent());
         });
-    }
-
-    unregisterChain() {
-        web3.eth.filter('chain').stopWatching();
-    }
-
-    unregisterPending() {
-        web3.eth.filter('pending').stopWatching();
-    }
-
-    unregisterAll() {
-        this.unregisterPending();
-        this.unregisterChain();
     }
 
     registerWorker(maxLength, price, name) {
@@ -169,40 +146,6 @@ class EthClient {
 
     unregisterListener(callback) {
 	listeners = listeners.filter((a) => a != callback);
-    }
-
-    getJsonRPCUrl() {
-        return this._jsonRpcUrl;
-    }
-
-    setJsonRPCUrl(url) {
-        if (!url.startsWith('http')) {
-            url = 'http://' + url;
-        }
-        this._jsonRpcUrl = url;
-        if (window.localStorage) {
-            window.localStorage.setItem('rpc_url', this._jsonRpcUrl);
-        }
-	listeners.forEach((func) => {
-	    func(this._jsonRpcUrl);
-	});
-        web3.setProvider(new web3.providers.HttpProvider(this._jsonRpcUrl));
-    }
-
-    sendMsg(to, data) {
-        web3.shh.post({
-            "from": this.identity,
-            "to": to,
-            "payload": [ web3.fromAscii(data) ],
-        });
-    }
-
-    askWorker(workerAddress, contractAddress) {
-        web3.shh.post({
-            "from": this.identity,
-            "topic": workerAddress,
-            "payload": [ contractAddress ],
-        });
     }
 }
 
