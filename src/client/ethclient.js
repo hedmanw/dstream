@@ -1,4 +1,5 @@
 import ContractAddress from "../fixtures/contractAddress.js";
+import ContractAbi from "../fixtures/contractAbi.js";
 import ContractStructure from "../fixtures/contractStructure.js";
 import web3 from "web3";
 
@@ -13,6 +14,8 @@ class EthClient {
         catch(e) {
             console.error("Could not contact Ethereum on localhost:8545 due to: %O", e);
         }
+        this.DStream = web3.eth.contract(ContractStructure.DStream);
+        window.DStream = this.DStream;
     }
     getCoinbase(success) {
         success(web3.eth.coinbase);
@@ -30,12 +33,19 @@ class EthClient {
         return (unit !== 'wei' ? web3.fromWei(wei, unit) : wei) + ' ' + unit;
     }
 
-    setContract(contractAddress) {
-        this.contract = new DStream(contractAddress);
+    deployContract(dataSize) {
+        let address = web3.eth.sendTransaction({code: ContractAbi})
+        this.setContract(address);
+        this.contract.setData(dataSize, {value: 100})
     }
 
-    confirmStreamedData(dataSize) {
-        contract.confirm(dataSize);
+    setContract(contractAddress, callback) {
+        this.contract = new this.DStream(contractAddress);
+        window.contract = this.contract;
+    }
+
+    confirmStreamedData(address, dataSize) {
+        contract.confirm(address, dataSize);
     }
 
     redeemPayout() {

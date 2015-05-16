@@ -1,13 +1,16 @@
 contract DStream {
 
-    address owner;
-    mapping (address => uint) redeemable;
+    address public owner;
+    mapping (address => uint) public redeemable;
     uint public depositTotal;
     uint public depositLeft;
     uint public filesize;
 
-    function DStream(uint size) {
+    function DStream() {
         owner = msg.sender;
+    }
+
+    function setData(uint size) {
         depositTotal = msg.value;
         filesize = size;
     }
