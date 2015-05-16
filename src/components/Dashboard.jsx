@@ -7,9 +7,9 @@ let Dashboard = React.createClass({
         return (
             <div className="container">
                 <h1>
-                    Zeppelin Dashboard
+                    DDD - Dastardly Dstream Dashboard
                 </h1>
-                <p className="lead">This is the dev dashboard. You can call it the stairway to heaven.</p>
+                <p className="lead">pls seed torrentz.</p>
                 <div className="row">
                     <div className="col-md-12">
                         <InfoBox updateLoop={EthClient.getChain.bind(EthClient)} unregister={EthClient.unregisterChain}/>

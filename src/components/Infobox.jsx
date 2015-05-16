@@ -9,13 +9,11 @@ let InfoBox = React.createClass({
         }
     },
     componentDidMount() {
-        console.log("load loop!");
         this.props.updateLoop(function(items) {
             this.setState(items);
         }.bind(this));
     },
     componentWillUnmount() {
-        console.log("unload ethwatch!");
         this.props.unregister();
     },
     render() {
