@@ -1,4 +1,5 @@
 import React from "react";
+import $ from "jquery";
 
 let SeedPanel = React.createClass({
     render() {
@@ -6,7 +7,7 @@ let SeedPanel = React.createClass({
 
         return <div className="container">
         {warning}
-        <SeedFile/>
+        <SeedForm/>
         <p>Hej!</p>
         </div>
     }
@@ -20,7 +21,7 @@ let PaymentWarning = React.createClass({
     }
 });
 
-
+/*
 let SeedFile = React.createClass({
     render() {
         return <form method="post" action="/ipfs">
@@ -30,64 +31,47 @@ let SeedFile = React.createClass({
                </form>;
     }
 });
-
-/*
-
-let SeedFile = React.createClass({
-    render() {
-        $.post("/ipfs", {
-            cmd: "addFile",
-            arg: 
-        }, (data) => {
-            console.log(data);
-        }).fail((xhr, status, err) => {
-            console.error(document.URL, status, err.toString())
-        });
-        EthClient.contract.setWorkerDtPort(DockerConfig.port);
-    }
-});
+*/
 
 let SeedForm = React.createClass({
     render: function() {
-        return
-            <form className="seedForm" onSubmit={this.handleSubmit}>
+        return <form className="seedForm" onSubmit={this.handleSubmit}>
                 <input type="hidden" name="cmd" value="addFile"/>
                 <input type="text" name="arg"/>
                 <input type="submit" value="Seed file"/>
-            </form>
+               </form>
     },
 
     handleSubmit: function(e) {
         e.preventDefault();
-        var author = React.findDOMNode(this.refs.author).value.trim();
-        var text = React.findDOMNode(this.refs.text).value.trim();
-        if (!text || !author) {
+        console.log(e);
+        this.handleSeedSubmit(); 
+/*
+        var cmd = React.findDOMNode(this.refs.cmd);
+        var arg = React.findDOMNode(this.refs.arg);
+
+        if (!cmd || !arg) {
+            console.log("ERROR ERROR");
           return;
         }
-        this.props.onCommentSubmit({author: author, text: text});
+        this.handleSeedSubmit({cmd: cmd, arg: arg});
 
-        React.findDOMNode(this.refs.author).value = '';
-        React.findDOMNode(this.refs.text).value = '';
-        return;
+        React.findDOMNode(this.refs.arg).value = '';
+        return;*/
+    },
+
+    handleSeedSubmit: function() {
+        $.post('/ipfs/file', {
+          cmd: 'addFile',
+          arg: '/file.txt'
+        }, (data) => {
+            console.log(data);
+        }).fail((a1,a2,a3) => {
+            console.error(a1,a2,a3);
+        });
     }
 });
 
-let SeedBox = React.createClass({
-    handleCommentSubmit: function(comment) {
-        $.ajax({
-          url: this.props.url,
-          dataType: 'json',
-          type: 'POST',
-          data: comment,
-          success: function(data) {
-            this.setState({data: data});
-          }.bind(this),
-          error: function(xhr, status, err) {
-            console.error(this.props.url, status, err.toString());
-          }.bind(this)
-        });
-    }
-})
-*/
+
 export default SeedPanel;
 

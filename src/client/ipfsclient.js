@@ -1,6 +1,6 @@
 import ipfsapi from "ipfs-api";
 
-var logging = false;
+var logging = true;
 
 class IPFSClient {
 
