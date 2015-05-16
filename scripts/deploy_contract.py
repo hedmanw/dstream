@@ -66,7 +66,19 @@ def gen_contract_address(filename):
                       "\n\nexport default contractAddress")
     addressFile.close()
 
+
+def gen_compiled_abi(filename):
+    eth_json = EthereumJSON()
+    source = open(filename, "r").read()
+    compiled = compile_solidity(eth_json, source)
+    abiFile = open("src/fixtures/contractAbi.js", "w")
+    abiFile.write("let contractAbi = \"" + compiled + "\";"
+                  "\n\nexport default contractAbi")
+    abiFile.close()
+
+
 filename = "contracts/DStream.sol"
 #gen_contract_address(filename)
+gen_compiled_abi(filename)
 gen_contract_structures(filename)
 
