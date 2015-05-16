@@ -1,8 +1,8 @@
 import ContractAddress from "../fixtures/contractAddress.js";
 import ContractStructure from "../fixtures/contractStructure.js";
+import web3 from "web3";
 
 if (typeof web3 === 'undefined') {
-    var web3 = require('ethereum.js');
     window.web3 = web3;
 }
 
