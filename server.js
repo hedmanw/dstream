@@ -31,14 +31,20 @@ let server = app.listen(8000, function () {
   console.log('Zeppelin listening at http://%s:%s', host, port);
 });
 
-app.post('/ipfs', function(req, res) {
-    if (req.body.cmd == 'addFile') {
-        res.send(ipfsclient.addFile(req.body.arg));
-    } else if (req.body.cmd == 'getFile') {
-        res.send(ipfsclient.getFile(req.body.arg));
-    } else if (req.body.cmd == 'getReceivedAmount') {
-        res.send(ipfsclient.getReceivedAmount(req.body.arg));
-    } else if (req.body.cmd == 'getProviders') {
-        res.send(ipfsclient.getProviders(req.body.arg));
-    }
+app.post('/ipfs/file', function(req, res) {
+    res.send(ipfsclient.addFile(req.body.arg));
 });
+
+app.get('/ipfs/file', function(req, res) {
+    res.send(ipfsclient.getFile(req.body.arg));
+});
+
+app.get('/ipfs/file/received', function(req, res) {
+    res.send(ipfsclient.getReceivedAmount(req.body.arg));
+});
+
+app.get('/ipfs/file/providers', function(req, res) {
+    res.send(ipfsclient.getProviders(req.body.arg));
+
+});
+
