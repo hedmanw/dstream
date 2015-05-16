@@ -2,19 +2,16 @@ import ContractAddress from "../fixtures/contractAddress.js";
 import ContractStructure from "../fixtures/contractStructure.js";
 import web3 from "web3";
 
-if (typeof web3 === 'undefined') {
-    window.web3 = web3;
-}
-
 var listeners = [];
 
 class EthClient {
     constructor() {
         try {
             web3.setProvider(new web3.providers.HttpProvider("http://localhost:8545"))
+            this.chainFilter = web3.eth.filter('latest');
         }
         catch(e) {
-            console.log("Could not contact " + this.getJsonRPCUrl());
+            console.error("Could not contact Ethereum on localhost:8545 due to: %O", e);
         }
     }
     getCoinbase(success) {
@@ -48,7 +45,7 @@ class EthClient {
         }.bind(this);
 
         success(createContent());
-        web3.eth.filter('latest').watch(function() {
+        this.chainFilter.watch(function() {
             success(createContent());
         });
     }
@@ -56,7 +53,6 @@ class EthClient {
     getPending(success) {
         let contract = this.contract;
         function createContent() {
-            let workers = contract.numWorkers();
             let latestBlock = web3.eth.blockNumber;
             return {
                 items: [
@@ -70,7 +66,6 @@ class EthClient {
                         value: Date(web3.eth.getBlock(latestBlock).timestamp)
                     },
                     {label: "Contract address", value: ContractAddress},
-                    {label: "Number of workers", value: workers.toString()}
                 ]
             }
         }
@@ -93,15 +88,10 @@ class EthClient {
     }
 
     unregisterChain() {
-        web3.eth.filter('chain').stopWatching();
-    }
-
-    unregisterPending() {
-        web3.eth.filter('pending').stopWatching();
+        this.chainFilter.stopWatching();
     }
 
     unregisterAll() {
-        this.unregisterPending();
         this.unregisterChain();
     }
 
