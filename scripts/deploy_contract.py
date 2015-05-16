@@ -67,6 +67,6 @@ def gen_contract_address(filename):
     addressFile.close()
 
 filename = "contracts/DStream.sol"
-gen_contract_address(filename)
+#gen_contract_address(filename)
 gen_contract_structures(filename)
 
