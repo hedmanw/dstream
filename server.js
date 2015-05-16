@@ -1,5 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import ipfsclient from './src/client/ipfsclient.js';
 
 let app = express();
 
@@ -28,4 +29,16 @@ let server = app.listen(8000, function () {
   let port = server.address().port;
 
   console.log('Zeppelin listening at http://%s:%s', host, port);
+});
+
+app.post('/ipfs', function(req, res) {
+    if (req.body.cmd == 'addFile') {
+        res.send(ipfsclient.addFile(req.body.arg));
+    } else if (req.body.cmd == 'getFile') {
+        res.send(ipfsclient.getFile(req.body.arg));
+    } else if (req.body.cmd == 'getReceivedAmount') {
+        res.send(ipfsclient.getReceivedAmount(req.body.arg));
+    } else if (req.body.cmd == 'getProviders') {
+        res.send(ipfsclient.getProviders(req.body.arg));
+    }
 });
