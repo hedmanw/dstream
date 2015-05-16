@@ -1,7 +1,7 @@
 contract DStream {
 
     address owner;
-    mapping public (address => uint) redeemable;
+    mapping (address => uint) redeemable;
     uint public depositTotal;
     uint public depositLeft;
     uint public filesize;
