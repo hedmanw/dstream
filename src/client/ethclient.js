@@ -3,9 +3,6 @@ import ContractAbi from "../fixtures/contractAbi.js";
 import ContractStructure from "../fixtures/contractStructure.js";
 import web3 from "web3";
 import PubSub from "pubsub-js";
-import Q from "q";
-
-web3.eth.getBalancePromise = Q.denodeify(web3.eth.getBalance);
 
 var listeners = [];
 
@@ -31,7 +28,7 @@ class EthClient {
     }
 
     getCash() {
-        web3.eth.getBalancePromise(web3.eth.coinbase);
+        return this.formatBalance(web3.eth.getBalance(web3.eth.coinbase));
     }
 
     formatBalance(wei) {

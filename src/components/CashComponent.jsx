@@ -9,7 +9,7 @@ let CashComponent = React.createClass({
     },
 
     refreshCash() {
-        EthClient.getCash().then((cash) => this.setState({cash: cash}));
+        this.setState({cash: EthClient.getCash()});
     },
 
     componentDidMount() {
